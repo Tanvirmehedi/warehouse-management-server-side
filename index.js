@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("WareHouse Server Is Running");
+  res.send("BookHouse Server Is Running");
 });
 
 app.listen(port, () => {

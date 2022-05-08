@@ -1,10 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-
 require("dotenv").config();
 const port = process.env.PORT || 4000;
-
 const app = express();
 
 // middleware intermigration
@@ -19,11 +17,30 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  console.log("BookHouse Db Connected");
-  client.close();
-});
+const run = async () => {
+  try {
+    await client.connect();
+    const productCollection = client.db("product").collection("items");
+    app.post("/items", async (req, res) => {
+      const item = req.body;
+      if (!item.name || !item.price) {
+        return res.send({
+          success: false,
+          error: "Pleas give the specific Data ",
+        });
+      }
+      const result = await productCollection.insertOne(item);
+      res.send({
+        success: true,
+        message: `Successfully inserted data ${item.name}`,
+      });
+    });
+    console.log("DATABASE Connected");
+  } catch (error) {
+    console.log(error);
+  }
+};
+run();
 
 app.get("/", (req, res) => {
   res.send("BookHouse Server Is Running");

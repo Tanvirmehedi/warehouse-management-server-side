@@ -46,6 +46,16 @@ const run = async () => {
       res.send({ success: true, data: items });
     });
 
+    // Limit Request
+    app.get("/item", async (req, res) => {
+      const cursor = productCollection.find().limit(6);
+      const items = await cursor.toArray();
+      if (!items?.length) {
+        return res.send({ success: false, error: "No Data Found" });
+      }
+      res.send({ success: true, data: items });
+    });
+
     console.log("DATABASE Connected");
   } catch (error) {
     console.log(error);

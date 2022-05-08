@@ -35,6 +35,17 @@ const run = async () => {
         message: `Successfully inserted data ${item.name}`,
       });
     });
+
+    // Get Request
+    app.get("/items", async (req, res) => {
+      const cursor = productCollection.find();
+      const items = await cursor.toArray();
+      if (!items?.length) {
+        return res.send({ success: false, error: "No Data Found" });
+      }
+      res.send({ success: true, data: items });
+    });
+
     console.log("DATABASE Connected");
   } catch (error) {
     console.log(error);

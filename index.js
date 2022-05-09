@@ -87,7 +87,7 @@ const run = async () => {
       if (!result) {
         return res.send({ success: false, error: "Id Is Not Found" });
       }
-      res.send({ success: true, data: item });
+      res.send({ success: true, data: result });
     });
     console.log("DATABASE Connected");
   } catch (error) {

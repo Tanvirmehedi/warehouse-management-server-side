@@ -21,6 +21,8 @@ const run = async () => {
   try {
     await client.connect();
     const productCollection = client.db("product").collection("items");
+
+    // Post Api
     app.post("/items", async (req, res) => {
       const item = req.body;
       if (!item.name || !item.price) {
@@ -62,6 +64,27 @@ const run = async () => {
       const query = { _id: ObjectId(id) };
       const item = await productCollection.findOne(query);
       if (!item) {
+        return res.send({ success: false, error: "Id Is Not Found" });
+      }
+      res.send({ success: true, data: item });
+    });
+
+    // Update API
+    app.put("/item/:id", async (req, res) => {
+      const id = req.params.id;
+      const update = req.body;
+      const filter = { _id: ObjectID(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: update,
+      };
+      const result = await productCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+
+      if (!result) {
         return res.send({ success: false, error: "Id Is Not Found" });
       }
       res.send({ success: true, data: item });

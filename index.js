@@ -89,6 +89,19 @@ const run = async () => {
       }
       res.send({ success: true, data: result });
     });
+
+    // Delete Api
+    app.delete("/item/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await productCollection.deleteOne(query);
+      if (!result) {
+        return res.send({ success: false, error: "Id Is Not Found" });
+      }
+      res.send({ success: true, data: result });
+    });
+
+    // FINISH API CALL -----------------------------------------------------------------------------
     console.log("DATABASE Connected");
   } catch (error) {
     console.log(error);
